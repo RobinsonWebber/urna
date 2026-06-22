@@ -1,5 +1,5 @@
- //import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+ import { BrowserRouter, Routes, Route } from "react-router-dom";
+//import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import Candidatos from "./pages/Candidatos";
@@ -10,7 +10,7 @@ import Eleitores from "./pages/Eleitores";
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
 
@@ -60,6 +60,6 @@ export default function App() {
     />
 
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
