@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import "./Eleitores.css";
@@ -13,11 +13,7 @@ export default function Eleitores() {
 
   const porPagina = 20;
 
-  useEffect(() => {
-    carregarEleitores();
-  }, [pagina, busca]);
-
-  async function carregarEleitores() {
+  const carregarEleitores = useCallback(async () => {
     const inicio = (pagina - 1) * porPagina;
     const fim = inicio + porPagina - 1;
 
@@ -44,13 +40,21 @@ export default function Eleitores() {
 
     setEleitores(data || []);
     setTotal(count || 0);
-  }
+  }, [pagina, busca]);
+
+  useEffect(() => {
+    carregarEleitores();
+  }, [carregarEleitores]);
 
   const totalPaginas = Math.ceil(total / porPagina);
 
   return (
     <div className="eleitores-page">
-      <button className="btn-voltar" onClick={() => navigate("/admin")}>
+
+      <button
+        className="btn-voltar"
+        onClick={() => navigate("/admin")}
+      >
         🏠 Voltar ao Painel
       </button>
 
@@ -84,25 +88,41 @@ export default function Eleitores() {
           </thead>
 
           <tbody>
-            {eleitores.map((eleitor) => (
-              <tr key={eleitor.id}>
-                <td>{eleitor.codigo}</td>
-                <td>{eleitor.nome}</td>
-                <td>{eleitor.turma}</td>
-                <td>
-                  {eleitor.ja_votou ? (
-                    <span className="status-votou">✅ Já votou</span>
-                  ) : (
-                    <span className="status-nao-votou">⏳ Não votou</span>
-                  )}
-                </td>
-                <td>
-                  {eleitor.votou_em
-                    ? new Date(eleitor.votou_em).toLocaleString("pt-BR")
-                    : "-"}
+            {eleitores.length > 0 ? (
+              eleitores.map((eleitor) => (
+                <tr key={eleitor.id}>
+                  <td>{eleitor.codigo}</td>
+                  <td>{eleitor.nome}</td>
+                  <td>{eleitor.turma}</td>
+
+                  <td>
+                    {eleitor.ja_votou ? (
+                      <span className="status-votou">
+                        ✅ Já votou
+                      </span>
+                    ) : (
+                      <span className="status-nao-votou">
+                        ⏳ Não votou
+                      </span>
+                    )}
+                  </td>
+
+                  <td>
+                    {eleitor.votou_em
+                      ? new Date(
+                          eleitor.votou_em
+                        ).toLocaleString("pt-BR")
+                      : "-"}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" style={{ textAlign: "center" }}>
+                  Nenhum eleitor encontrado.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
@@ -110,7 +130,7 @@ export default function Eleitores() {
       <div className="paginacao">
         <button
           disabled={pagina === 1}
-          onClick={() => setPagina(pagina - 1)}
+          onClick={() => setPagina((p) => p - 1)}
         >
           ← Anterior
         </button>
@@ -121,11 +141,12 @@ export default function Eleitores() {
 
         <button
           disabled={pagina >= totalPaginas}
-          onClick={() => setPagina(pagina + 1)}
+          onClick={() => setPagina((p) => p + 1)}
         >
           Próxima →
         </button>
       </div>
+
     </div>
   );
 }

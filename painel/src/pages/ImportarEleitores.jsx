@@ -9,26 +9,6 @@ export default function ImportarEleitores() {
   const [erro, setErro] = useState("");
   const navigate = useNavigate();
 
-  function baixarModeloCSV() {
-  const conteudo = `codigo,nome,turma
-  1001,Ana Silva,5º Ano
-  1002,Pedro Souza,5º Ano
-  1003,Maria Oliveira,4º Ano`;
-
-  const blob = new Blob([conteudo], {
-    type: "text/csv;charset=utf-8;",
-  });
-
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = "modelo_eleitores.csv";
-  link.click();
-
-  URL.revokeObjectURL(url);
-}
-
   function importarCSV(e) {
     const arquivo = e.target.files[0];
 
