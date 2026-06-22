@@ -7,6 +7,7 @@ import ImportarEleitores from "./pages/ImportarEleitores";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Apuracao from "./pages/Apuracao";
 import Eleitores from "./pages/Eleitores";
+import { Navigate } from "react-router-dom";
 
 export default function App() {
   return (
@@ -58,6 +59,8 @@ export default function App() {
         </ProtectedRoute>
       }
     />
+
+    <Route path="/" element={<Navigate to="/login" />} />
 
       </Routes>
     </BrowserRouter>
